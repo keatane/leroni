@@ -3,6 +3,7 @@
 with pkgs; [
   libgcc
   python3
+  podman
   vscodium
   brave
   vlc
