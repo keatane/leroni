@@ -78,32 +78,40 @@ app-install(){
             printf "\n[X] - Missing art.nix file, no app will be installed\n"
             exit -1
         fi
-    
+        if test -f "games.nix"; then
+            printf "\n[*] - Games configuration loaded, installing apps...\n"
+            export NIXPKGS_ALLOW_UNFREE=1
+            nix-env -i -f "art.nix"
+        else
+            printf "\n[X] - Missing games.nix file, no app will be installed\n"
+            exit -1
+        fi
+
     elif [[ $config = "work" ]]; then
-            if test -f "work.nix"; then
-                printf "\n[*] - Work configuration loaded, installing apps...\n"
-                nix-env -i -f "work.nix"
-            else
-                printf "\n[X] - Missing work.nix file, no app will be installed\n"
-                exit -1
-            fi
+        if test -f "work.nix"; then
+            printf "\n[*] - Work configuration loaded, installing apps...\n"
+            nix-env -i -f "work.nix"
+        else
+            printf "\n[X] - Missing work.nix file, no app will be installed\n"
+            exit -1
+        fi
     elif [[ $config = "art" ]]; then
-            if test -f "art.nix"; then
-                printf "\n[*] - Art configuration loaded, installing apps...\n"
-                nix-env -i -f "art.nix"
-            else
-                printf "\n[X] - Missing art.nix file, no app will be installed\n"
-                exit -1
-            fi
+        if test -f "art.nix"; then
+            printf "\n[*] - Art configuration loaded, installing apps...\n"
+            nix-env -i -f "art.nix"
+        else
+            printf "\n[X] - Missing art.nix file, no app will be installed\n"
+            exit -1
+        fi
     elif [[ $config = "games" ]]; then
-            if test -f "games.nix"; then
-                printf "\n[*] - Games configuration loaded, installing apps...\n"
-                export NIXPKGS_ALLOW_UNFREE=1
-                nix-env -i -f "art.nix"
-            else
-                printf "\n[X] - Missing games.nix file, no app will be installed\n"
-                exit -1
-            fi
+        if test -f "games.nix"; then
+            printf "\n[*] - Games configuration loaded, installing apps...\n"
+            export NIXPKGS_ALLOW_UNFREE=1
+            nix-env -i -f "art.nix"
+        else
+            printf "\n[X] - Missing games.nix file, no app will be installed\n"
+            exit -1
+        fi
     fi
     printf "\n[V] - App installation finished, exiting...\n"
 }
