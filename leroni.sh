@@ -10,21 +10,24 @@ if [ $# -eq 0 ]; then
     exit -1
 fi
 
-if [ $# -eq 2 ]; then
-    config=$2
+request=$1 
+shift
+
+# Check if at least one config file has been provided
+if [ $# -gt 0 ]; then
+    config=$@
 fi
 
 leroni-help(){
-    printf "\n------------------------------------------------------\n"
+    printf "\n------------------------------------------------------------------------------\n"
     printf "\nLeroni - Helper\n\n"
     printf "Please, provide one of the following arguments:\n"
-    printf "+ help \t\t\t-- will provide this menu\n"
-    printf "+ install [config] \t-- will install nix and apps\n"
-    printf "+ uninstall \t\t-- will remove nix and apps\n"
-    printf "+ apps [config]\t\t-- will install just apps of config chosen, nix required\n"
-    printf "\nPossible configs: work, art\n"
-    printf "(omitting will install all config files)\n"
-    printf "\n------------------------------------------------------\n\n"
+    printf "+ help \t\t\t\t\t-- provide this menu\n"
+    printf "+ install [config_1] [config_2] \t-- install nix and apps\n"
+    printf "+ uninstall \t\t\t\t-- remove nix and apps\n"
+    printf "+ apps [config_1] [config_2]\t\t-- install just apps of config files chosen, nix required\n"
+    printf "\nNote: omitting [config] files will install all config files in the current directly.\n"
+    printf "\n------------------------------------------------------------------------------\n\n"
 }
 
 nix-uninstall(){
@@ -64,73 +67,41 @@ app-install(){
     printf "\n[*] - Starting app installation from Nix\n"
     if [[ $config = "all" ]]; then
         printf "[*] - All configurations loaded\n"
-        if test -f "work.nix"; then
-            printf "\n[*] - Work configuration loaded, installing apps...\n"
-            nix-env -i -f "work.nix"
-        else
-            printf "\n[X] - Missing work.nix file, no app will be installed\n"
-            exit -1
-        fi
-        if test -f "art.nix"; then
-            printf "\n[*] - Art configuration loaded, installing apps...\n"
-            nix-env -i -f "art.nix"
-        else
-            printf "\n[X] - Missing art.nix file, no app will be installed\n"
-            exit -1
-        fi
-        if test -f "games.nix"; then
-            printf "\n[*] - Games configuration loaded, installing apps...\n"
+        for file in *.nix; do
+            printf "\n[*] - $file configuration loaded, installing apps...\n"
             export NIXPKGS_ALLOW_UNFREE=1
-            nix-env -i -f "art.nix"
-        else
-            printf "\n[X] - Missing games.nix file, no app will be installed\n"
-            exit -1
-        fi
-
-    elif [[ $config = "work" ]]; then
-        if test -f "work.nix"; then
-            printf "\n[*] - Work configuration loaded, installing apps...\n"
-            nix-env -i -f "work.nix"
-        else
-            printf "\n[X] - Missing work.nix file, no app will be installed\n"
-            exit -1
-        fi
-    elif [[ $config = "art" ]]; then
-        if test -f "art.nix"; then
-            printf "\n[*] - Art configuration loaded, installing apps...\n"
-            nix-env -i -f "art.nix"
-        else
-            printf "\n[X] - Missing art.nix file, no app will be installed\n"
-            exit -1
-        fi
-    elif [[ $config = "games" ]]; then
-        if test -f "games.nix"; then
-            printf "\n[*] - Games configuration loaded, installing apps...\n"
-            export NIXPKGS_ALLOW_UNFREE=1
-            nix-env -i -f "art.nix"
-        else
-            printf "\n[X] - Missing games.nix file, no app will be installed\n"
-            exit -1
-        fi
+            nix-env -i -f "$file"
+        done
+    else
+        for arg in $config; do
+            if test -f "$arg.nix"; then
+                printf "\n[*] - $arg configuration loaded, installing apps...\n"
+                export NIXPKGS_ALLOW_UNFREE=1
+                nix-env -i -f "$arg.nix"
+            else
+                printf "\n[X] - Missing $arg.nix file, no app will be installed\n"
+                exit -1
+            fi
+        done
     fi
-    printf "\n[V] - App installation finished, exiting...\n"
+    printf "\n[V] - App installation finished, a reboot is suggested, exiting...\n"
 }
 
 # Map arguments
-if [ $1 = "help" ]; then
+if [[ $request = "help" ]]; then
     leroni-help
 
-elif [[ $1 = "uninstall" ]]; then
+elif [[ $request = "uninstall" ]]; then
     nix-uninstall
 
-elif [[ $1 = "install" ]]; then
+elif [[ $request = "install" ]]; then
     nix-install
     app-install
 
-elif [[ $1 = "apps" ]]; then
+elif [[ $request = "apps" ]]; then
     app-install
 
 else
-    printf "[X] - Command not recognized\n\n"
+    printf "\n[X] - Command not recognized\n"
     leroni-help
 fi
