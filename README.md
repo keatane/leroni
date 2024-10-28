@@ -23,5 +23,5 @@ Please, provide one of the following arguments:
 Note: omitting [config] files will install all config files in the current directory.
 
 ## Example
-`./leroni.sh install` -- installs both nix and all the packages present in nix files in the directory of the shell script
+`./leroni.sh install` -- installs both nix and all the packages present in nix files in the directory of the shell script  
 `./leroni.sh apps work` -- installs the packages contained in the work.nix file, if present in the directory of the shell script
