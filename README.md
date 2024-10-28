@@ -22,5 +22,3 @@ Please, provide one of the following arguments:
 + apps [config_1] [config_2]		-- install just apps of config files chosen, nix required
 
 Note: omitting [config] files will install all config files in the current directly.
-
-------------------------------------------------------------------------------
