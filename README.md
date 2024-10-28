@@ -16,9 +16,9 @@ Search for packages from the official site: https://search.nixos.org/packages
 
 ## Helper
 Please, provide one of the following arguments:
-+ help 					-- provide this menu
-+ install [config_1] [config_2] 	-- install nix and apps
-+ uninstall 				-- remove nix and apps
-+ apps [config_1] [config_2]		-- install just apps of config files chosen, nix required
++ help -- provide this menu
++ install [config_1] [config_2] -- install nix and apps
++ uninstall -- remove nix and apps
++ apps [config_1] [config_2] -- install just apps of config files chosen, nix required
 
 Note: omitting [config] files will install all config files in the current directly.
